@@ -1,5 +1,4 @@
 // noprotect
-
 var scl = 100;
 var buffer = 25;
 var rows = 600 / scl;
@@ -10,19 +9,6 @@ var oldY;
 
 function setup() {
   createCanvas(600, 600);
-
-  // Set board colors
-  fill(204, 101, 192, 127);
-  stroke(127, 63, 120);
-
-  // Draw the board
-  for (var i = 0; i < rows; i++) {
-    for (var j = 0; j < cols; j++) {
-      stroke(150);
-      fill(180);
-      rect(i * scl, j * scl, scl, scl);
-    }
-  }
 
   cars[0] = new Car(0, 2, true, 1, 2);
   cars[1] = new Car(1, 3, false, 0, 0);
@@ -46,7 +32,6 @@ function mouseReleased() {
   }
 }
 
-  
 function draw() {
   background(0);
 	for (var i = 0; i < cars.length; i++) {
@@ -62,7 +47,7 @@ function Car(index, l_, dir_, x_, y_) {
   this.horiz = dir_;
   this.x = x_*scl;
   this.y = y_*scl;
-	var x1;
+  var x1;
   var y1;
   var top;
   var blockedTop;
