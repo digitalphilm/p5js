@@ -1,6 +1,5 @@
 // noprotect
 var scl = 100;
-var buffer = 25;
 var rows = 600 / scl;
 var cols = 600 / scl;
 var cars = [];
