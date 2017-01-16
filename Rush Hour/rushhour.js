@@ -1,3 +1,122 @@
+// noprotect
+
+var scl = 100;
+var buffer = 25;
+var rows = 600 / scl;
+var cols = 600 / scl;
+var cars = [];
+var oldX;
+var oldY;
+
+function setup() {
+  createCanvas(600, 600);
+
+  // Set board colors
+  fill(204, 101, 192, 127);
+  stroke(127, 63, 120);
+
+  // Draw the board
+  for (var i = 0; i < rows; i++) {
+    for (var j = 0; j < cols; j++) {
+      stroke(150);
+      fill(180);
+      rect(i * scl, j * scl, scl, scl);
+    }
+  }
+
+  cars[0] = new Car(0, 2, true, 1, 2);
+  cars[1] = new Car(1, 3, false, 0, 0);
+  cars[2] = new Car(2, 2, true, 1, 0);
+  cars[3] = new Car(3, 3, false, 3, 1);
+  cars[4] = new Car(4, 2, false, 0, 3);
+  cars[5] = new Car(5, 2, true, 1, 4);
+  cars[6] = new Car(6, 3, true, 2, 5);
+  cars[7] = new Car(7, 3, false, 5, 3);
+}
+
+function mousePressed() {
+	for (var i = 0; i < cars.length; i++) {
+  	cars[i].clicked(mouseX,mouseY);  
+  }
+}
+
+function mouseReleased() {
+	for (var i = 0; i < cars.length; i++) {
+  	cars[i].stopDragging();  
+  }
+}
+
+  
+function draw() {
+  background(0);
+	for (var i = 0; i < cars.length; i++) {
+  	cars[i].mouseover(mouseX,mouseY);
+  	cars[i].drag(mouseX,mouseY);
+    cars[i].touching();
+  	cars[i].display();
+  }
+}
+
+function Car(index, l_, dir_, x_, y_) {
+  this.l = l_;
+  this.horiz = dir_;
+  this.x = x_*scl;
+  this.y = y_*scl;
+	var x1;
+  var y1;
+  var top;
+  var blockedTop;
+  var right;
+  var blockedRight;
+  var bottom;
+  var blockedBottom;
+  var left;
+  var blockedLeft;
+  this.index = index;
+  this.offsetX = 0;
+  this.offsetY = 0; 
+  this.dragging = false; //are we dragging?
+  this.hover = false; //are we hovering over this object?
+  
+  // Is a point inside the rectangle (for rollover)
+  this.mouseover = function(mx, my) {
+    if (this.horiz) {
+    	if (mx > this.x && mx < this.x + (this.l * scl) && my > this.y && my < this.y + scl) {
+	      this.hover = true;
+	    } else {
+	      this.hover = false;
+	    }
+    } else {
+      if (mx > this.x && mx < this.x + scl && my > this.y && my < this.y + (this.l * scl)) {
+	      this.hover = true;
+	    } else {
+	      this.hover = false;
+	    }
+    }
+  }
+  
+  // Is a point inside the rectangle (for click)?
+  this.clicked = function(mx, my) {
+    if (mx > this.left && mx < this.right && my > this.top && my < this.bottom) {
+    	this.dragging = true
+	    if (this.horiz) {
+	      oldX = mx;
+     		this.offsetX = this.x-mx;
+	    } else {
+	      oldY = my;
+        this.offsetY = this.y-my;
+	    }
+    }
+  }
+
+  // Stop dragging
+  this.stopDragging = function() {
+    this.dragging = false;
+  }
+  
+  // Drag the rectangle
+  this.drag = function(mx, my) {
+    if (this.dragging) {
       if (this.horiz) {
       	if (oldX < mx && !this.blockedRight) this.x = ceil((mx + this.offsetX)/100)*100;
       	if (oldX > mx && !this.blockedLeft) this.x = ceil((mx + this.offsetX)/100)*100;
@@ -69,3 +188,6 @@
 	      if ((sameY && this.bottom >= cars[i].top && this.top < cars[i].top) || this.bottom >= height) this.blockedBottom = true;        
         if ((sameY && this.top <= cars[i].bottom && this.bottom > cars[i].bottom) || this.top <= 0) this.blockedTop = true;
       }
+	  }
+	}
+}//end Car();
